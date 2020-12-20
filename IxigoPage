@@ -1,0 +1,111 @@
+
+package IxigoSearch;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+
+import java.io.File;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import bsh.ParseException;
+
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
+//import org.testng.annotations.Test;
+
+public class IxigoPage{
+
+
+    public static void main(String[] args) throws InterruptedException, java.text.ParseException, ParseException {
+
+    	System.setProperty("webdriver.chrome.driver","D:\\chromedriver.exe");
+    	WebDriver driver=new ChromeDriver();
+    	driver.manage().window().maximize();
+    	
+        String baseUrl = "https://www.ixigo.com/";
+    
+        driver.get(baseUrl);
+        
+        //Selecting Round-Trip
+        Thread.sleep(1000);
+        WebElement roundTrip = driver.findElement(By.xpath("//span[text()='Round Trip']"));
+        roundTrip.click();
+        
+        Actions act = new Actions(driver);
+		// Selecting Departure
+		WebElement drpdwn = driver.findElement(By.xpath("//div[text()=\"From\"]/following-sibling::input[@placeholder=\"Enter city or airport\"]"));
+		drpdwn.sendKeys("DEL");			
+		
+		drpdwn.sendKeys(Keys.ENTER);
+		Thread.sleep(1000);
+		
+		// Selecting Destination
+		WebElement dest_drpdwn = driver.findElement(By.xpath("//div[text()=\"To\"]/following-sibling::input[@placeholder=\"Enter city or airport\"]"));
+		dest_drpdwn.sendKeys("MUM");		
+		
+		dest_drpdwn.sendKeys(Keys.ENTER);
+		Thread.sleep(1000);	
+       
+		
+		
+		//Current Date
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf3 = new SimpleDateFormat("ddMMyyyy");
+		Calendar c = Calendar.getInstance();
+		Calendar c2 = Calendar.getInstance();
+
+		String currentDate = sdf.format(c.getTime());
+
+		c.setTime(sdf.parse(currentDate));
+		c.add(Calendar.DAY_OF_MONTH, 30);
+		c2.add(Calendar.DAY_OF_MONTH, 40);
+		
+		//Date after adding the days to the given date
+		String departureDate = sdf3.format(c.getTime());
+		String returnDate = sdf3.format(c2.getTime());
+		
+		//Displaying the new Date after addition of Days
+		System.out.println("Departure Date: "+departureDate);
+		System.out.println("Return Date: "+returnDate);
+
+		
+		driver.findElement(By.xpath("//td[@data-date='"+departureDate+"']")).click();
+
+		
+		driver.findElement(By.xpath("(//td[@data-date='"+returnDate+"'])[2]")).click();
+
+        
+		 //clicking on Search button
+		 WebElement search = driver.findElement(By.xpath("//button[text()=\"Search\"]"));
+		 search.click();
+		 
+		 Thread.sleep(4000);
+		 
+		 WebDriverWait wait = new WebDriverWait(driver,90);
+		 wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//div[@class=\"result-col-inner\"])[1]/div")));
+         
+         
+		 
+        driver.close();
+       
+    }
+
+}
